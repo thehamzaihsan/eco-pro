@@ -1,12 +1,13 @@
 "use client"
 
 import { useState, useCallback } from "react"
+import Link from "next/link"
 import { ImageUploader } from "./image-uploader"
 import { ConveyorBelt } from "./conveyor-belt"
 import { RecyclingBins } from "./recycling-bins"
 import { TrashItem } from "./trash-item"
 import { classifyTrash, type TrashCategory } from "@/lib/classify"
-import { Recycle } from "lucide-react"
+import { Recycle, BarChart3 } from "lucide-react"
 
 export interface ProcessingItem {
   id: string
@@ -82,6 +83,13 @@ export function RecyclingPlant() {
             </div>
           </div>
           <div className="flex items-center gap-6">
+            <Link
+              href="/stats"
+              className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border hover:bg-accent hover:border-primary transition-colors text-sm font-medium"
+            >
+              <BarChart3 className="w-4 h-4" />
+              <span className="hidden sm:inline">Model Stats</span>
+            </Link>
             <div className="text-right">
               <p className="text-xs text-muted-foreground">Items Sorted</p>
               <p className="text-xl font-bold text-primary">{Object.values(stats).reduce((a, b) => a + b, 0)}</p>

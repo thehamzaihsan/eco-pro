@@ -124,6 +124,9 @@ export function ImageUploader({ onUpload }: ImageUploaderProps) {
 
   return (
     <>
+      {/* Debug info */}
+      {showCameraModal && <div className="fixed top-0 left-0 bg-red-500 text-white p-2 z-[100]">Modal State: TRUE</div>}
+      
       <div className="flex flex-col gap-3">
         <div
           onDrop={handleDrop}
@@ -168,21 +171,7 @@ export function ImageUploader({ onUpload }: ImageUploaderProps) {
         <button
           onClick={() => {
             console.log("Use Camera button clicked")
-            // On mobile, trigger the file input with capture attribute
-            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
-            if (isMobile) {
-              const input = document.createElement('input')
-              input.type = 'file'
-              input.accept = 'image/*'
-              input.setAttribute('capture', 'environment')
-              input.onchange = (e) => {
-                const file = (e.target as HTMLInputElement).files?.[0]
-                if (file) handleFile(file)
-              }
-              input.click()
-            } else {
-              startCamera()
-            }
+            startCamera()
           }}
           className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-border bg-card hover:bg-accent hover:border-primary transition-colors text-sm font-medium"
         >

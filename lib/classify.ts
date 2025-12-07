@@ -42,8 +42,8 @@ export async function classifyTrash(imageUrl: string): Promise<TrashCategory> {
     const formData = new FormData()
     formData.append("image", file)
 
-    // Call Python backend API
-    const apiResponse = await fetch("http://127.0.0.1:8000/api/classify/", {
+    // Call Next.js API route (which proxies to Python backend)
+    const apiResponse = await fetch("/api/classify", {
       method: "POST",
       body: formData,
     })

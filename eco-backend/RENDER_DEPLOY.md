@@ -52,7 +52,8 @@ In the Render dashboard, add these environment variables:
 | `PYTHON_VERSION` | `3.11.0` | Python version |
 | `DEBUG` | `False` | Disable debug mode |
 | `SECRET_KEY` | `[generate-random-key]` | Django secret key (see below) |
-| `ALLOWED_HOSTS` | `your-app.onrender.com` | Your Render domain |
+| `ALLOWED_HOSTS` | `ecopro.hamzaihsan.me,your-app.onrender.com` | Allowed domains |
+| `CORS_ALLOWED_ORIGINS` | `https://ecopro.hamzaihsan.me` | Frontend domain |
 
 **Generate a SECRET_KEY:**
 ```bash

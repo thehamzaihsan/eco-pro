@@ -11,7 +11,17 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-change-this-in-produc
 
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(',') if os.environ.get('ALLOWED_HOSTS') else ['*']
+# Parse ALLOWED_HOSTS from environment or use defaults
+if os.environ.get('ALLOWED_HOSTS'):
+    ALLOWED_HOSTS = [host.strip() for host in os.environ.get('ALLOWED_HOSTS').split(',')]
+else:
+    ALLOWED_HOSTS = [
+        'localhost',
+        '127.0.0.1',
+        'ecopro.hamzaihsan.me',
+        '.onrender.com',  # Allow all Render subdomains
+        '*'  # Remove this in production
+    ]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -104,14 +114,23 @@ REST_FRAMEWORK = {
 YOLO_MODEL_PATH = BASE_DIR / 'yoloMODEL.pt'
 
 # CORS settings
-CORS_ALLOW_ALL_ORIGINS = True  # For development only
+# In production, set CORS_ALLOWED_ORIGINS in environment variable
+if os.environ.get('CORS_ALLOWED_ORIGINS'):
+    CORS_ALLOWED_ORIGINS = [origin.strip() for origin in os.environ.get('CORS_ALLOWED_ORIGINS').split(',')]
+    CORS_ALLOW_ALL_ORIGINS = False
+else:
+    # Development defaults
+    CORS_ALLOW_ALL_ORIGINS = True
+    CORS_ALLOWED_ORIGINS = [
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "http://localhost:8000",
+        "http://127.0.0.1:8000",
+        "https://ecopro.hamzaihsan.me",
+        "http://ecopro.hamzaihsan.me",
+    ]
+
 CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-    "http://localhost:8000",
-    "http://127.0.0.1:8000",
-]
 CORS_ALLOW_METHODS = [
     'DELETE',
     'GET',
@@ -131,3 +150,15 @@ CORS_ALLOW_HEADERS = [
     'x-csrftoken',
     'x-requested-with',
 ]
+
+# Security settings for production
+if not DEBUG:
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    X_FRAME_OPTIONS = 'DENY'
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True

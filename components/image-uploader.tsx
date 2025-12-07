@@ -66,13 +66,25 @@ export function ImageUploader({ onUpload }: ImageUploaderProps) {
   const startCamera = useCallback(async () => {
     console.log("Starting camera...")
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ 
-        video: { 
-          facingMode: "environment",
-          width: { ideal: 1280 },
-          height: { ideal: 720 }
-        } 
-      })
+      // Try different constraint configurations for better compatibility
+      let stream
+      try {
+        // First try with ideal constraints
+        stream = await navigator.mediaDevices.getUserMedia({ 
+          video: { 
+            facingMode: { ideal: "environment" },
+            width: { ideal: 1280 },
+            height: { ideal: 720 }
+          } 
+        })
+      } catch (e) {
+        // Fallback to simpler constraints
+        console.log("Trying fallback camera constraints...")
+        stream = await navigator.mediaDevices.getUserMedia({ 
+          video: { facingMode: "environment" } 
+        })
+      }
+      
       console.log("Camera stream obtained:", stream)
       if (videoRef.current) {
         videoRef.current.srcObject = stream
@@ -82,7 +94,8 @@ export function ImageUploader({ onUpload }: ImageUploaderProps) {
       }
     } catch (error) {
       console.error("Error accessing camera:", error)
-      alert("Unable to access camera. Please check permissions.")
+      const errorMessage = error instanceof Error ? error.message : "Unknown error"
+      alert(`Unable to access camera: ${errorMessage}\n\nPlease ensure:\n1. You're using HTTPS\n2. Camera permissions are granted\n3. No other app is using the camera`)
     }
   }, [])
 
@@ -155,7 +168,21 @@ export function ImageUploader({ onUpload }: ImageUploaderProps) {
         <button
           onClick={() => {
             console.log("Use Camera button clicked")
-            startCamera()
+            // On mobile, trigger the file input with capture attribute
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
+            if (isMobile) {
+              const input = document.createElement('input')
+              input.type = 'file'
+              input.accept = 'image/*'
+              input.setAttribute('capture', 'environment')
+              input.onchange = (e) => {
+                const file = (e.target as HTMLInputElement).files?.[0]
+                if (file) handleFile(file)
+              }
+              input.click()
+            } else {
+              startCamera()
+            }
           }}
           className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-border bg-card hover:bg-accent hover:border-primary transition-colors text-sm font-medium"
         >

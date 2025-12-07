@@ -17,6 +17,8 @@ export function ImageUploader({ onUpload }: ImageUploaderProps) {
   const videoRef = useRef<HTMLVideoElement>(null)
   const streamRef = useRef<MediaStream | null>(null)
 
+  console.log("ImageUploader render - showCameraModal:", showCameraModal)
+
   const handleFile = useCallback(
     (file: File) => {
       if (!file.type.startsWith("image/")) return
@@ -62,6 +64,7 @@ export function ImageUploader({ onUpload }: ImageUploaderProps) {
   )
 
   const startCamera = useCallback(async () => {
+    console.log("Starting camera...")
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ 
         video: { 
@@ -70,10 +73,12 @@ export function ImageUploader({ onUpload }: ImageUploaderProps) {
           height: { ideal: 720 }
         } 
       })
+      console.log("Camera stream obtained:", stream)
       if (videoRef.current) {
         videoRef.current.srcObject = stream
         streamRef.current = stream
         setShowCameraModal(true)
+        console.log("Modal should be visible now")
       }
     } catch (error) {
       console.error("Error accessing camera:", error)
@@ -148,7 +153,10 @@ export function ImageUploader({ onUpload }: ImageUploaderProps) {
         </div>
 
         <button
-          onClick={startCamera}
+          onClick={() => {
+            console.log("Use Camera button clicked")
+            startCamera()
+          }}
           className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-border bg-card hover:bg-accent hover:border-primary transition-colors text-sm font-medium"
         >
           <Camera className="w-4 h-4" />

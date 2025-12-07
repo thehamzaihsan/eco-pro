@@ -166,8 +166,8 @@ export function ImageUploader({ onUpload }: ImageUploaderProps) {
 
       {/* Camera Modal */}
       {showCameraModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="relative w-full max-w-lg bg-background rounded-2xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+          <div className="relative w-full max-w-lg bg-background rounded-2xl shadow-2xl overflow-hidden">
             {/* Header */}
             <div className="flex items-center justify-between p-4 border-b border-border bg-card">
               <h3 className="text-lg font-semibold flex items-center gap-2">

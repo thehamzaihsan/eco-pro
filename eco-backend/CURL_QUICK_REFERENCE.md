@@ -53,9 +53,12 @@ $form = @{
 Invoke-RestMethod -Uri "http://localhost:8000/api/classify/" -Method Post -Form $form
 ```
 
----
+### Use YOLOv8n Detection Model
+```bash
+curl -X POST -F "image=@test_image.jpg" -F "model=yolov8n-detect" http://localhost:8000/api/classify/
+```
 
-## 🧪 Test All Models
+---
 
 ### Linux/Mac/Git Bash
 ```bash
@@ -81,6 +84,7 @@ test_all_models.bat test_image.jpg
 | `yolov11m-3class` | 3 | Fast | Quick sorting |
 | `yolov11n-12class` | 12 | Medium | **Default** - Best accuracy |
 | `yolov8n-3class` | 3 | Fast | Legacy support |
+| `yolov8n-detect` | 3 | Fast | Object detection |
 
 ---
 

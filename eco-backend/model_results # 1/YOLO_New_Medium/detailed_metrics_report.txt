@@ -1,0 +1,45 @@
+================================================================================
+DETAILED METRICS REPORT - YOLO New Medium
+================================================================================
+
+--- Overall Metrics (Macro-Averaged) ---
+Accuracy:  0.9817
+Precision: 0.9820
+Recall:    0.9817
+F1-Score:  0.9816
+
+--- Overall Metrics (Weighted) ---
+Precision: 0.9820
+Recall:    0.9817
+F1-Score:  0.9816
+
+--- Per-Class Metrics ---
+
+CARDBOARD:
+  Precision: 1.0000
+  Recall:    0.9600
+  F1-Score:  0.9796
+
+GLASS:
+  Precision: 0.9754
+  Recall:    0.9900
+  F1-Score:  0.9826
+
+PLASTIC:
+  Precision: 0.9707
+  Recall:    0.9950
+  F1-Score:  0.9827
+
+--- Confusion Matrix ---
+[[384   8   8]
+ [  0 396   4]
+ [  0   2 398]]
+
+--- Confidence Statistics ---
+Mean:      0.9900
+Median:    1.0000
+Std Dev:   0.0532
+Min:       0.3793
+Max:       1.0000
+
+================================================================================

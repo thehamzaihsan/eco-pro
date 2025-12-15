@@ -1,0 +1,45 @@
+================================================================================
+DETAILED METRICS REPORT - YOLO Old D
+================================================================================
+
+--- Overall Metrics (Macro-Averaged) ---
+Accuracy:  0.3333
+Precision: 0.1111
+Recall:    0.3333
+F1-Score:  0.1667
+
+--- Overall Metrics (Weighted) ---
+Precision: 0.1111
+Recall:    0.3333
+F1-Score:  0.1667
+
+--- Per-Class Metrics ---
+
+CARDBOARD:
+  Precision: 0.3333
+  Recall:    1.0000
+  F1-Score:  0.5000
+
+GLASS:
+  Precision: 0.0000
+  Recall:    0.0000
+  F1-Score:  0.0000
+
+PLASTIC:
+  Precision: 0.0000
+  Recall:    0.0000
+  F1-Score:  0.0000
+
+--- Confusion Matrix ---
+[[400   0   0]
+ [400   0   0]
+ [400   0   0]]
+
+--- Confidence Statistics ---
+Mean:      0.0000
+Median:    0.0000
+Std Dev:   0.0000
+Min:       0.0000
+Max:       0.0000
+
+================================================================================

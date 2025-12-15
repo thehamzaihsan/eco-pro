@@ -1,0 +1,20 @@
+================================================================================
+MODEL COMPARISON SUMMARY
+================================================================================
+
+Total images tested: 1200
+Classes: ['cardboard', 'glass', 'plastic']
+Models tested: 1
+
+Comparison Table:
+Model                         Accuracy    Precision       Recall     F1-Score
+--------------------------------------------------------------------------------
+YOLO Old D                      0.3333       0.1111       0.3333       0.1667
+
+🏆 Best Model (by F1-Score): YOLO Old D
+   - Accuracy: 0.3333
+   - F1-Score: 0.1667
+   - Precision: 0.1111
+   - Recall: 0.3333
+
+================================================================================

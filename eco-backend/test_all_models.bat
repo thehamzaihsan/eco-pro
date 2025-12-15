@@ -42,15 +42,22 @@ curl -s -X POST -F "image=@%IMAGE%" -F "model=yolov8n-3class" "%API_URL%"
 echo.
 echo.
 
+REM Test Model 4: YOLOv8n Detection
+echo 4. Testing YOLOv8n Detection
+echo --------------------------------------
+curl -s -X POST -F "image=@%IMAGE%" -F "model=yolov8n-detect" "%API_URL%"
+echo.
+echo.
+
 REM Test default (no model specified)
-echo 4. Testing Default Model ^(no model param^)
+echo 5. Testing Default Model ^(no model param^)
 echo --------------------------------------
 curl -s -X POST -F "image=@%IMAGE%" "%API_URL%"
 echo.
 echo.
 
 REM List available models
-echo 5. Listing Available Models
+echo 6. Listing Available Models
 echo --------------------------------------
 curl -s "http://localhost:8000/api/models/"
 echo.

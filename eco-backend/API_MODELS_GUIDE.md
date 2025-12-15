@@ -2,13 +2,14 @@
 
 ## 📋 Available Models
 
-Your backend supports **3 different YOLO models**:
+Your backend supports **4 different YOLO models**:
 
 | Model Key | Model Name | Classes | Use Case |
 |-----------|------------|---------|----------|
 | `yolov11m-3class` | YOLOv11m (3 Classes) | 3 | Fast, basic classification |
 | `yolov11n-12class` | YOLOv11n (12 Classes) | 12 | **Default** - Detailed classification |
 | `yolov8n-3class` | YOLOv8n (3 Classes) | 3 | Legacy, basic classification |
+| `yolov8n-detect` | YOLOv8n Detection | 3 | Detection model |
 
 **Default Model:** `yolov11n-12class` (12 classes)
 
@@ -51,6 +52,11 @@ Invoke-RestMethod -Uri "http://localhost:8000/api/models/" -Method Get
     {
       "key": "yolov8n-3class",
       "name": "YOLOv8n (3 Classes)",
+      "classes": 3
+    },
+    {
+      "key": "yolov8n-detect",
+      "name": "YOLOv8n Detection",
       "classes": 3
     }
   ],
@@ -327,9 +333,12 @@ Run:
 .\test_all_models.ps1
 ```
 
----
+### Use YOLOv8n Detection Model
+```bash
+curl -X POST -F "image=@test_image.jpg" -F "model=yolov8n-detect" http://localhost:8000/api/classify/
+```
 
-## 🌐 Using with Remote Server
+---
 
 Replace `localhost:8000` with your server URL:
 
@@ -438,14 +447,14 @@ const handleImageUpload = async (file, selectedModel) => {
 
 ## 🔍 Model Comparison
 
-| Feature | YOLOv11m (3 class) | YOLOv11n (12 class) | YOLOv8n (3 class) |
-|---------|-------------------|---------------------|-------------------|
-| **Speed** | Fast | Medium | Fast |
-| **Accuracy** | Good | Best | Good |
-| **Classes** | 3 | 12 | 3 |
-| **Detail** | Basic | Detailed | Basic |
-| **Use Case** | Quick sorting | Detailed analysis | Legacy support |
-| **Model Size** | Medium | Small | Small |
+| Feature | YOLOv11m (3 class) | YOLOv11n (12 class) | YOLOv8n (3 class) | YOLOv8n Detection |
+|---------|-------------------|---------------------|-------------------|-------------------|
+| **Speed** | Fast | Medium | Fast | Fast |
+| **Accuracy** | Good | Best | Good | Good |
+| **Classes** | 3 | 12 | 3 | 3 |
+| **Detail** | Basic | Detailed | Basic | Basic |
+| **Use Case** | Quick sorting | Detailed analysis | Legacy support | Object detection |
+| **Model Size** | Medium | Small | Small | Small |
 
 ---
 

@@ -21,7 +21,8 @@ if (-not (Test-Path $Image)) {
 $models = @(
     @{Key="yolov11m-3class"; Name="YOLOv11m (3 Classes)"},
     @{Key="yolov11n-12class"; Name="YOLOv11n (12 Classes) - DEFAULT"},
-    @{Key="yolov8n-3class"; Name="YOLOv8n (3 Classes) - Legacy"}
+    @{Key="yolov8n-3class"; Name="YOLOv8n (3 Classes) - Legacy"},
+    @{Key="yolov8n-detect"; Name="YOLOv8n Detection"}
 )
 
 $counter = 1

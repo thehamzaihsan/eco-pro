@@ -1,4 +1,4 @@
-export type TrashCategory = "paper" | "cardboard" | "plastic" | "vegetation" | "biological" | "metal" | "clothes" | "glass" | "trash" | "shoes" | "battery"
+export type TrashCategory = "paper" | "cardboard" | "plastic" | "vegetation" | "biological" | "metal" | "clothes" | "glass" | "trash" | "shoes" | "battery" | "others"
 
 export const categoryConfig: Record<
   TrashCategory,
@@ -75,9 +75,15 @@ export const categoryConfig: Record<
     icon: "🔋",
     position: 100,
   },
+  others: {
+    label: "others",
+    color: "#ff9800",
+    icon: "❓",
+    position: 110,
+  },
 }
 
-const categories: TrashCategory[] = ["paper", "cardboard", "plastic", "vegetation", "biological", "metal", "clothes", "glass", "trash", "shoes", "battery"]
+const categories: TrashCategory[] = ["paper", "cardboard", "plastic", "vegetation", "biological", "metal", "clothes", "glass", "trash", "shoes", "battery", "others"]
 
 export async function classifyTrash(imageUrl: string, modelKey?: string): Promise<{ category: TrashCategory }> {
   try {
@@ -105,49 +111,65 @@ export async function classifyTrash(imageUrl: string, modelKey?: string): Promis
 
     const data = await apiResponse.json()
     
-    // Get the first prediction's class_name
+    // Get the first prediction's class_name and confidence
     let category: TrashCategory
     if (data.predictions && data.predictions.length > 0) {
-      const className = data.predictions[0].class_name?.toLowerCase().trim()
+      const topPrediction = data.predictions[0]
+      const className = topPrediction.class_name?.toLowerCase().trim()
+      const topConfidence = topPrediction.confidence || 0
       
-      // Create mapping for variations
-      const classNameMap: Record<string, TrashCategory> = {
-        'paper': 'paper',
-        'cardboard': 'cardboard',
-        'plastic': 'plastic',
-        'vegetation': 'vegetation',
-        'biological': 'biological',
-        'metal': 'metal',
-        'clothes': 'clothes',
-        'glass': 'glass',
-        'miscellaneous trash': 'trash',
-        'miscellaneous': 'trash',
-        'trash': 'trash',
-        'shoes': 'shoes',
-        'battery': 'battery',
-      }
-      
-      // Map class name to our category
-      if (classNameMap[className]) {
-        category = classNameMap[className]
+      // Check if confidence is below 0.80 threshold
+      if (topConfidence < 0.80) {
+        category = 'others'
       } else {
-        // Fallback to random if invalid category
-        console.warn("Invalid category received:", className)
-        const randomIndex = Math.floor(Math.random() * categories.length)
-        category = categories[randomIndex]
+        // Check difference from second highest class (if available)
+        let differenceFromSecond = 1.0 // Default to max difference if only one prediction
+        if (data.predictions.length > 1) {
+          const secondConfidence = data.predictions[1].confidence || 0
+          differenceFromSecond = topConfidence - secondConfidence
+        }
+        
+        // Require difference > 0.80 from other classes
+        if (differenceFromSecond <= 0.80) {
+          category = 'others'
+        } else {
+          // Create mapping for variations
+          const classNameMap: Record<string, TrashCategory> = {
+            'paper': 'paper',
+            'cardboard': 'cardboard',
+            'plastic': 'plastic',
+            'vegetation': 'vegetation',
+            'biological': 'biological',
+            'metal': 'metal',
+            'clothes': 'clothes',
+            'glass': 'glass',
+            'miscellaneous trash': 'trash',
+            'miscellaneous': 'trash',
+            'trash': 'trash',
+            'shoes': 'shoes',
+            'battery': 'battery',
+          }
+          
+          // Map class name to our category
+          if (classNameMap[className]) {
+            category = classNameMap[className]
+          } else {
+            // Fallback to others if invalid category
+            console.warn("Invalid category received:", className)
+            category = 'others'
+          }
+        }
       }
     } else {
-      // Fallback to random if no predictions
+      // Fallback to others if no predictions
       console.warn("No predictions received:", data)
-      const randomIndex = Math.floor(Math.random() * categories.length)
-      category = categories[randomIndex]
+      category = 'others'
     }
     
     return { category }
   } catch (error) {
     console.error("Classification error:", error)
-    // Fallback to random category on error
-    const randomIndex = Math.floor(Math.random() * categories.length)
-    return { category: categories[randomIndex] }
+    // Fallback to others category on error
+    return { category: 'others' }
   }
 }

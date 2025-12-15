@@ -45,6 +45,7 @@ export function RecyclingPlant() {
     trash: 0,
     shoes: 0,
     battery: 0,
+    others: 0,
   })
   const [activeBin, setActiveBin] = useState<TrashCategory | null>(null)
   const [models, setModels] = useState<ModelInfo[]>([])

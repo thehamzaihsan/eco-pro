@@ -1,0 +1,22 @@
+================================================================================
+MODEL COMPARISON SUMMARY
+================================================================================
+
+Total images tested: 1200
+Classes: ['cardboard', 'glass', 'plastic']
+Models tested: 3
+
+Comparison Table:
+Model                         Accuracy    Precision       Recall     F1-Score
+--------------------------------------------------------------------------------
+YOLO New Medium                 0.9817       0.9820       0.9817       0.9816
+YOLO Old CLS                    0.9342       0.9372       0.9342       0.9345
+YOLO Old D                      0.3333       0.1111       0.3333       0.1667
+
+🏆 Best Model (by F1-Score): YOLO New Medium
+   - Accuracy: 0.9817
+   - F1-Score: 0.9816
+   - Precision: 0.9820
+   - Recall: 0.9817
+
+================================================================================

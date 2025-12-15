@@ -35,7 +35,6 @@ curl -s -X POST \
   "$API_URL" | python3 -m json.tool || echo "Failed to parse JSON"
 echo ""
 
-# Test Model 3: YOLOv8n (3 Classes)
 echo "3. Testing YOLOv8n (3 Classes) - Legacy"
 echo "--------------------------------------"
 curl -s -X POST \
@@ -44,8 +43,17 @@ curl -s -X POST \
   "$API_URL" | python3 -m json.tool || echo "Failed to parse JSON"
 echo ""
 
+# Test Model 4: YOLOv8n Detection
+echo "4. Testing YOLOv8n Detection"
+echo "--------------------------------------"
+curl -s -X POST \
+  -F "image=@$IMAGE" \
+  -F "model=yolov8n-detect" \
+  "$API_URL" | python3 -m json.tool || echo "Failed to parse JSON"
+echo ""
+
 # Test default (no model specified)
-echo "4. Testing Default Model (no model param)"
+echo "5. Testing Default Model (no model param)"
 echo "--------------------------------------"
 curl -s -X POST \
   -F "image=@$IMAGE" \
@@ -53,7 +61,7 @@ curl -s -X POST \
 echo ""
 
 # List available models
-echo "5. Listing Available Models"
+echo "6. Listing Available Models"
 echo "--------------------------------------"
 curl -s "${API_URL%/classify/}/models/" | python3 -m json.tool || echo "Failed to parse JSON"
 echo ""

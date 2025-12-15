@@ -1,0 +1,45 @@
+================================================================================
+DETAILED METRICS REPORT - YOLO Old CLS
+================================================================================
+
+--- Overall Metrics (Macro-Averaged) ---
+Accuracy:  0.9342
+Precision: 0.9372
+Recall:    0.9342
+F1-Score:  0.9345
+
+--- Overall Metrics (Weighted) ---
+Precision: 0.9372
+Recall:    0.9342
+F1-Score:  0.9345
+
+--- Per-Class Metrics ---
+
+CARDBOARD:
+  Precision: 0.9918
+  Recall:    0.9025
+  F1-Score:  0.9450
+
+GLASS:
+  Precision: 0.8894
+  Recall:    0.9650
+  F1-Score:  0.9257
+
+PLASTIC:
+  Precision: 0.9303
+  Recall:    0.9350
+  F1-Score:  0.9327
+
+--- Confusion Matrix ---
+[[361  24  15]
+ [  1 386  13]
+ [  2  24 374]]
+
+--- Confidence Statistics ---
+Mean:      0.9621
+Median:    0.9998
+Std Dev:   0.0991
+Min:       0.4222
+Max:       1.0000
+
+================================================================================

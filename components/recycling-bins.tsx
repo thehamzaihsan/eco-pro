@@ -10,8 +10,8 @@ interface RecyclingBinsProps {
 }
 
 // Different bin configurations based on model
-const bin3Classes: TrashCategory[] = ["cardboard", "plastic", "glass"]
-const bin12Classes: TrashCategory[] = ["paper", "cardboard", "plastic", "vegetation", "biological", "metal", "clothes", "glass", "trash", "shoes", "battery"]
+const bin3Classes: TrashCategory[] = ["cardboard", "plastic", "glass", "others"]
+const bin12Classes: TrashCategory[] = ["paper", "cardboard", "plastic", "vegetation", "biological", "metal", "clothes", "glass", "trash", "shoes", "battery", "others"]
 
 export function RecyclingBins({ stats, activeBin, modelClasses = 12 }: RecyclingBinsProps) {
   // Select bins based on number of classes

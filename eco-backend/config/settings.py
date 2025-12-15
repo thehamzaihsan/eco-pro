@@ -126,6 +126,11 @@ YOLO_MODELS = {
         'path': BASE_DIR / 'yoloMODEL_old_cls.pt',
         'classes': 3,
         'name': 'YOLOv8n (3 Classes)'
+    },
+    'yolov8n-detect': {
+        'path': BASE_DIR / 'yoloMODEL_old_d.pt',
+        'classes': 3,
+        'name': 'YOLOv8n Detection'
     }
 }
 

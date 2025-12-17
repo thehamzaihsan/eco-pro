@@ -142,8 +142,8 @@ export function RecyclingPlant() {
       <header className="py-4 px-4 border-b border-border">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center">
-              <Recycle className="w-6 h-6 text-primary-foreground" />
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center">
+              <img src="/logo.png" alt="EcoSort Logo" className="w-10 h-10 object-contain" />
             </div>
             <div>
               <h1 className="text-xl font-bold tracking-tight">EcoSort</h1>

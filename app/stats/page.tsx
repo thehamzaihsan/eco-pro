@@ -98,11 +98,14 @@ function StatsContent() {
             </Link>
           </div>
           <div className="mt-4 flex items-start justify-between">
-            <div>
-              <h1 className="text-3xl font-bold tracking-tight">Model Performance Statistics</h1>
-              <p className="text-muted-foreground mt-2">
-                Detailed analytics and performance metrics of the waste classification model
-              </p>
+            <div className="flex items-center gap-3">
+              <img src="/logo.png" alt="EcoSort" className="w-8 h-8 object-contain" />
+              <div>
+                <h1 className="text-3xl font-bold tracking-tight">Model Performance Statistics</h1>
+                <p className="text-muted-foreground mt-2">
+                  Detailed analytics and performance metrics of the waste classification model
+                </p>
+              </div>
             </div>
             <div className="flex flex-col gap-1">
               <label className="text-xs text-muted-foreground">Select Model</label>

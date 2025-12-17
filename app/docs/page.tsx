@@ -18,7 +18,7 @@ export default function DocsPage() {
               Back to Home
             </Link>
             <div className="flex items-center gap-2">
-              <BookOpen className="w-5 h-5 text-primary" />
+              <img src="/logo.png" alt="EcoSort" className="w-5 h-5 object-contain" />
               <span className="font-semibold">Documentation</span>
             </div>
           </div>

@@ -9,6 +9,12 @@ class ResultCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final topPrediction = result.topPrediction;
+    
+    // Debug logging
+    print('🎯 ResultCard - Ensemble details:');
+    print('   Is ensemble: ${result.isEnsemble}');
+    print('   Models count: ${result.ensembleDetails?.modelsUsed.length ?? 0}');
+    print('   Models: ${result.ensembleDetails?.modelsUsed}');
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -73,9 +79,44 @@ class ResultCard extends StatelessWidget {
                   ),
                 ),
               ),
+              
+              // Ensemble Badge
+              if (result.isEnsemble) ...[
+                const SizedBox(height: 12),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: Colors.purple.withOpacity(0.3),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.purple.withOpacity(0.5)),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.groups, color: Colors.purple, size: 16),
+                      const SizedBox(width: 6),
+                      Text(
+                        'Ensemble: ${result.ensembleDetails!.modelsUsed.length} models',
+                        style: const TextStyle(
+                          color: Colors.purple,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ],
           ),
         ),
+        
+        // Ensemble Details Card
+        if (result.isEnsemble && result.ensembleDetails != null) ...[
+          const SizedBox(height: 16),
+          _buildEnsembleDetails(result.ensembleDetails!),
+        ],
+        
         const SizedBox(height: 24),
 
         // All Predictions
@@ -113,19 +154,169 @@ class ResultCard extends StatelessWidget {
                       fontSize: 12,
                     ),
                   ),
-                  Text(
-                    'Time: ${result.inferenceTime.toStringAsFixed(1)}ms',
-                    style: const TextStyle(
-                      color: Colors.white70,
-                      fontSize: 12,
+                  if (result.inferenceTime > 0)
+                    Text(
+                      'Time: ${result.inferenceTime.toStringAsFixed(1)}ms',
+                      style: const TextStyle(
+                        color: Colors.white70,
+                        fontSize: 12,
+                      ),
                     ),
-                  ),
                 ],
               ),
             ],
           ),
         ),
       ],
+    );
+  }
+  
+  Widget _buildEnsembleDetails(EnsembleDetails details) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.purple.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.purple.withOpacity(0.3)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.how_to_vote, color: Colors.purple, size: 20),
+              const SizedBox(width: 8),
+              const Text(
+                'Ensemble Voting Details',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          
+          // Voting Method
+          _buildDetailRow(
+            icon: Icons.ballot,
+            label: 'Method',
+            value: details.votingMethodDisplay,
+          ),
+          
+          // Vote Count
+          if (details.voteCount != null && details.totalModels != null)
+            _buildDetailRow(
+              icon: Icons.check_circle,
+              label: 'Agreement',
+              value: '${details.voteCount}/${details.totalModels} models',
+            ),
+          
+          // Threshold
+          _buildDetailRow(
+            icon: Icons.filter_alt,
+            label: 'Threshold',
+            value: '${(details.threshold * 100).toInt()}%',
+          ),
+          
+          // Model Predictions
+          if (details.modelPredictions != null && details.modelPredictions!.isNotEmpty) ...[
+            const SizedBox(height: 12),
+            const Divider(color: Colors.white12),
+            const SizedBox(height: 12),
+            const Text(
+              'Individual Model Votes:',
+              style: TextStyle(
+                color: Colors.white70,
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            const SizedBox(height: 8),
+            ...details.modelPredictions!.map((pred) {
+              return _buildModelVote(pred);
+            }),
+          ],
+        ],
+      ),
+    );
+  }
+  
+  Widget _buildDetailRow({
+    required IconData icon,
+    required String label,
+    required String value,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        children: [
+          Icon(icon, size: 16, color: Colors.purple.withOpacity(0.7)),
+          const SizedBox(width: 8),
+          Text(
+            '$label:',
+            style: const TextStyle(
+              color: Colors.white70,
+              fontSize: 13,
+            ),
+          ),
+          const SizedBox(width: 8),
+          Text(
+            value,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 13,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+  
+  Widget _buildModelVote(ModelPrediction pred) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Row(
+        children: [
+          Container(
+            width: 8,
+            height: 8,
+            decoration: BoxDecoration(
+              color: Colors.purple,
+              shape: BoxShape.circle,
+            ),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              pred.modelDisplayName,
+              style: const TextStyle(
+                color: Colors.white70,
+                fontSize: 12,
+              ),
+            ),
+          ),
+          Text(
+            pred.prediction,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          const SizedBox(width: 8),
+          Text(
+            '${(pred.confidence * 100).toStringAsFixed(0)}%',
+            style: TextStyle(
+              color: _getConfidenceColor(pred.confidence),
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
     );
   }
 

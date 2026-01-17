@@ -75,3 +75,80 @@ class ModelListView(APIView):
             'models': models,
             'default': settings.DEFAULT_MODEL
         }, status=status.HTTP_200_OK)
+
+
+class EnsembleClassificationView(APIView):
+    """
+    Ensemble classification using multiple models with majority voting
+    """
+    def post(self, request):
+        from .ensemble import EnsembleVoting
+        
+        serializer = ImageUploadSerializer(data=request.data)
+        
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+        image = serializer.validated_data['image']
+        
+        # Get parameters
+        confidence_threshold = float(request.data.get('threshold', 0.3))
+        voting_method = request.data.get('method', 'majority')  # 'majority' or 'weighted'
+        
+        # Save image to temp file
+        with tempfile.NamedTemporaryFile(delete=False, suffix='.jpg') as temp_file:
+            for chunk in image.chunks():
+                temp_file.write(chunk)
+            temp_path = temp_file.name
+        
+        try:
+            # Create ensemble classifier
+            ensemble = EnsembleVoting(confidence_threshold=confidence_threshold)
+            
+            # Choose voting method
+            if voting_method == 'weighted':
+                result = ensemble.classify_with_weighted_voting(temp_path)
+            else:
+                result = ensemble.classify_with_ensemble(temp_path)
+            
+            if result['final_prediction'] is None:
+                return Response({
+                    'message': 'No confident predictions from any model',
+                    'predictions': [],
+                    'ensemble_result': result
+                }, status=status.HTTP_200_OK)
+            
+            # Format response similar to single model
+            final_pred = {
+                'class_name': result['final_prediction'],
+                'confidence': result['confidence'],
+                'class_id': 0  # Not applicable for ensemble
+            }
+            
+            return Response({
+                'message': 'Image classified successfully using ensemble',
+                'predictions': [final_pred],
+                'ensemble_details': {
+                    'voting_method': result.get('voting_method', voting_method),
+                    'models_used': result['models_used'],
+                    'model_predictions': result['model_predictions'],
+                    'votes': result.get('votes', {}),
+                    'vote_count': result.get('vote_count'),
+                    'total_models': result.get('total_models'),
+                    'threshold': confidence_threshold
+                },
+                'count': 1,
+                'model': 'ensemble'
+            }, status=status.HTTP_200_OK)
+            
+        except Exception as e:
+            import traceback
+            return Response({
+                'error': str(e),
+                'traceback': traceback.format_exc()
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            
+        finally:
+            # Clean up temp file
+            if os.path.exists(temp_path):
+                os.remove(temp_path)
